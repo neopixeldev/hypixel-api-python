@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hypxiel_api_python" # TODO: choose a name (that is not taken in pypi), then also rename the package
+version = "0.0.1"
+
+# TODO: Who is "an author"?
+authors = [
+  { name="Example Author", email="author@example.com" },
+]
+
+description = "Asynchronous Python wrapper for the Hypixel API."
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+
+[project.urls]
+"Homepage" = "https://github.com/hypixelapiwrapper/hypixel-api-python"
+"Bug Tracker" = "https://github.com/hypixelapiwrapper/hypixel-api-python/issues"
+"Discord" = "https://discord.gg/jkFycp8HBC"
