@@ -1,7 +1,7 @@
 import requests
 import datetime
 
-class Pynapple(object):
+class Peach(object):
     def __init__(self,key):
         self.key = key
 
