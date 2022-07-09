@@ -43,17 +43,4 @@ class Peach(object):
         time = hyapi['player']['lastLogout']
         return datetime.datetime.fromtimestamp(time / 1000)
 
-    class Bedwars(object):
-        pass
-
-    class Skyblock(object):
-        def init(self):
-            return
-
-    class Duels(object):
-        def init(self):
-            return
-
-    class Skywars(object):
-        def init(self):
-            return
+   
