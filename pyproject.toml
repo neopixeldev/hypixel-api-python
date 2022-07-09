@@ -6,9 +6,12 @@ build-backend = "setuptools.build_meta"
 name = "hypxiel_api_python" # TODO: choose a name (that is not taken in pypi), then also rename the package
 version = "0.0.1"
 
-# TODO: Who is "an author"?
+# TODO: Who is an author and who is an maintainer?
 authors = [
   { name="Example Author", email="author@example.com" },
+]
+maintainers = [
+  { name="Example Maintainer", email="maintainer@example.com" },
 ]
 
 description = "Asynchronous Python wrapper for the Hypixel API."
