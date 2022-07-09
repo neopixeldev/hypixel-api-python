@@ -18,7 +18,7 @@ class Peach(object):
 
 
     def getUuid(self,name):
-        uuid = Pynapple.fetch(f'https://api.mojang.com/users/profiles/minecraft/{name}')['id']
+        uuid = self.fetch(f'https://api.mojang.com/users/profiles/minecraft/{name}')['id']
         return uuid
 
     def getRank(self,name):
