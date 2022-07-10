@@ -1,25 +1,25 @@
 from aiohttp import ClientSession
-# probably need to add a datetime import eventually
-# import HypixelAPI object
+from datetime import datetime
 
 
-async def get(endpoint: str, nocache: bool = None):
-    """This function will determine whether it should use a cached object or fetch a new one."""
+async def get(self, endpoint: str, param: tuple, nocache: bool = None):
+    api = self.hypixel_api
+    """Determine whether it should use a cached object or fetch a new one."""
     """`nocache` is a way for the user to bypass the cache"""
-    # need to factor in necessary data, e.g. getting/storing a specific request for a UUID rather than the
-    # endpoint itself (currently represented as `object` in pseudocode)
+    cached_value = self.hypixel_api.endpoints[param][endpoint.replace("/", "")]
+    if not cached_value:
+        return await fetch(self=self, url=f"{api.path}/{endpoint}?key={api.key}&{param[0]}={param[1]}")
 
-    # if endpoint not in cached endpoints or object not in endpoints[endpoint]:
-    #    # await fetch
-    # elif x time has passed since it was cached or nocache:
-    #   await fetch
-    # else:
-    #    return endpoints[endpoint]
-    pass
+    elif cached_value["hypixel-api-python"]["timestamp"] + 60 > int(datetime.now().timestamp()) or nocache:
+        return await fetch(self=self, url=f"{api.path}/{endpoint}?key={api.key}&{param[0]}={param[1]}")
+
+    else:
+        return cached_value
 
 
-async def fetch(url: str):
-    """This function fetches data from the Hypixel API"""
+async def fetch(self, url: str):
+    """Fetches data from the Hypixel API"""
+    api = self.hypixel_api
     async with ClientSession() as session:
         async with session.get(url) as request:
 
