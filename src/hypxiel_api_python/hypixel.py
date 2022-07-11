@@ -5,5 +5,4 @@ class HypixelAPI:
     def __init__(self, key):
         self.key = key
         self.path = "https://api.hypixel.net/"
-        self.endpoints = {}
-
+        self.request_cache = {}
