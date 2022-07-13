@@ -4,29 +4,52 @@ from src.hypxiel_api_python.utils.cache import purge_cache
 from src.hypxiel_api_python.hypixel import HypixelAPI
 
 
-async def get(hypixel_api: HypixelAPI, endpoint: str, params: dict[str, str], nocache: bool = None) -> dict:
-    """Determine whether it should use a cached object or fetch a new one."""
-    """`nocache` is a way for the user to bypass the cache"""
-    if not endpoint.startswith("/"):
-        endpoint = f"/{endpoint}"
+async def get(
+        hypixel_api: HypixelAPI,
+        endpoint: str,
+        params: dict[str, str] = {"", ""},
+        *,
+        nocache: bool = False,
+        expiration_time: int = 60,
+        ) -> dict:
+    """
+    If the cache is empty, is older than 60 seconds or the user wants to bypass the cache, fetch a new object.
+    Otherwise, return the cached object
+
+    :param hypixel_api: The HypixelAPI object
+    :type hypixel_api: HypixelAPI
+    :param endpoint: The endpoint you want to fetch data from
+    :type endpoint: str
+    :param params: The parameters to send to the API
+    :type params: dict[str, str]
+    :param nocache: Whether to bypass the cache
+    :type nocache: bool
+    :param expiration_time: The time in seconds after which the cache will expire, defaults to 60
+    :type expiration_time: int
+    :return: A dictionary containing the response from the Hypixel API.
+    """
 
     await purge_cache(hypixel_api)
     auth_header = {"API-Key": hypixel_api.key}
-    try:
-        cached_response = hypixel_api.request_cache[f"{endpoint}.{params}"]
-        # print(cached_response)
-    except KeyError:
-        cached_response = None
-    # if not cached_response:
-    #     return await fetch(self, endpoint, params, auth_header)
-    if not cached_response or cached_response["hypixel-api-python"]["timestamp"] + 60 > int(datetime.now().timestamp()) or nocache:
+    cached_response = hypixel_api.request_cache.get(f"{endpoint}.{params}")
+
+    if (
+        not cached_response
+        or cached_response["hypixel-api-python"]["timestamp"] + expiration_time > int(datetime.now().timestamp())
+        or nocache
+    ):
         return await fetch_hypxiel_api(hypixel_api, endpoint, params, auth_header)
 
     else:
         return cached_response["response"]
 
 
-async def fetch_hypxiel_api(hypixel_api: HypixelAPI, endpoint: str, params: dict[str, str], headers: dict[str, str]) -> dict:
+async def fetch_hypxiel_api(
+        hypixel_api: HypixelAPI,
+        endpoint: str,
+        params: dict[str, str],
+        headers: dict[str, str],
+        ) -> dict:
     """
     Fetches data from the Hypixel API and returns it as a dictionary
 
@@ -45,7 +68,6 @@ async def fetch_hypxiel_api(hypixel_api: HypixelAPI, endpoint: str, params: dict
         async with session.get(endpoint, params=params) as request:
             ratelimit_info = {x: y for x, y in request.headers.items() if x.startswith("RateLimit-")}
             # ratelimit
-            print(request.status)
             if request.status == 429:
                 # add handling for ratelimiting
                 pass
