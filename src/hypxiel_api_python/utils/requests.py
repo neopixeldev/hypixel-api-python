@@ -38,13 +38,13 @@ async def get(
         or cached_response["hypixel-api-python"]["timestamp"] + expiration_time > int(datetime.now().timestamp())
         or nocache
     ):
-        return await fetch_hypxiel_api(hypixel_api, endpoint, params, auth_header)
+        return await fetch(hypixel_api, endpoint, params, auth_header)
 
     else:
         return cached_response["response"]
 
 
-async def fetch_hypxiel_api(
+async def fetch(
         hypixel_api: HypixelAPI,
         endpoint: str,
         params: dict[str, str],
